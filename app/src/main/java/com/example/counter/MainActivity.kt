@@ -1,11 +1,11 @@
 package com.example.counter
 
-import android.content.Intent
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,13 +22,24 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val name: EditText = findViewById(R.id.editTextText)
+        val name: EditText = findViewById(R.id.nameEditText)
+        val saveButton: Button = findViewById(R.id.saveButton)
+        val resultText: TextView = findViewById(R.id.resultTextView)
 
-        val button: Button = findViewById(R.id.button)
-        button.setOnClickListener {
-            val text = name.text.toString()
+        val sharedPreference = getSharedPreferences("values", Context.MODE_PRIVATE)
+        val savedValue = sharedPreference.getString("value", "")
 
-            Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+        resultText.text = savedValue
+
+        saveButton.setOnClickListener {
+            val newName = name.text.toString()
+
+            val editor = sharedPreference.edit()
+            editor.putString("value", newName)
+            editor.clear()
+            editor.apply()
+
+            resultText.text = newName
         }
     }
 }
